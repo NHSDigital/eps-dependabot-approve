@@ -1,0 +1,69 @@
+{
+  "name": "eps-account-resources",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "..",
+    "args": {
+      "DOCKER_GID": "${env:DOCKER_GID:}",
+      "IMAGE_NAME": "node_24_python_3_14",
+      "IMAGE_VERSION": "v1.4.4",
+      "USER_UID": "${localEnv:USER_ID:}",
+      "USER_GID": "${localEnv:GROUP_ID:}"
+    }
+  },
+  "mounts": [
+    "source=${env:HOME}${env:USERPROFILE}/.aws,target=/home/vscode/.aws,type=bind",
+    "source=${env:HOME}${env:USERPROFILE}/.ssh,target=/home/vscode/.ssh,type=bind",
+    "source=${env:HOME}${env:USERPROFILE}/.gnupg,target=/home/vscode/.gnupg,type=bind",
+    "source=${env:HOME}${env:USERPROFILE}/.npmrc,target=/home/vscode/.npmrc,type=bind",
+    "source=${env:HOME}${env:USERPROFILE}/.gitconfig,target=/home/vscode/.gitconfig,type=bind"
+  ],
+  "features": {},
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "AmazonWebServices.aws-toolkit-vscode",
+        "redhat.vscode-yaml",
+        "ms-python.python",
+        "ms-python.flake8",
+        "eamodio.gitlens",
+        "github.vscode-pull-request-github",
+        "lfm.vscode-makefile-term",
+        "GrapeCity.gc-excelviewer",
+        "redhat.vscode-xml",
+        "streetsidesoftware.code-spell-checker",
+        "timonwong.shellcheck",
+        "mkhl.direnv",
+        "github.vscode-github-actions",
+        "dbaeumer.vscode-eslint",
+        "vitest.explorer"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/workspaces/electronic-prescription-service-account-resources/.venv/bin/python",
+        "python.analysis.autoSearchPaths": true,
+        "python.analysis.extraPaths": [],
+        "python.testing.unittestEnabled": false,
+        "python.testing.pytestEnabled": true,
+        "python.linting.pylintEnabled": false,
+        "python.linting.flake8Enabled": true,
+        "python.linting.enabled": true,
+        "editor.formatOnPaste": false,
+        "editor.formatOnType": false,
+        "editor.formatOnSave": false,
+        "editor.formatOnSaveMode": "file",
+        "cSpell.words": [
+          "fhir",
+          "Formik",
+          "pino",
+          "serialisation"
+        ],
+        "eslint.useFlatConfig": true,
+        "eslint.format.enable": true,
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+      }
+    }
+  },
+  "remoteEnv": {
+    "LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}"
+  }
+}
