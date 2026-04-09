@@ -1,0 +1,23 @@
+[project]
+python = "^3.14"
+name = "CHANGE_ME"
+
+[tool.poetry]
+name = "CHANGE_ME"
+description = "CHANGE_ME"
+version = "0.0.1-alpha"
+authors = [
+  "EPS Team <eps.tem@nhs.net>"
+]
+readme = "README.md"
+license = "MIT"
+repository = "https://github.com/NHSDigital/CHANGE_ME"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.14"
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^4.5.1"
+
+[tool.poetry.scripts]
