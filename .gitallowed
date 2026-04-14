@@ -2,6 +2,7 @@ token: ?"?\$\{\{\s*secrets\.GITHUB_TOKEN\s*\}\}"?
 github-token: ?"?\$\{\{\s*secrets\.GITHUB_TOKEN\s*\}\}"?
 token: ?"?\$\{\{\s*secrets\.DEPENDABOT_TOKEN\s*\}\}"?
 id-token: write
+id-token: "write"
 --token=\$\{\{\s*steps\.generate-token\.outputs\.token\s*\}\}
 --token=\$GITHUB-TOKEN
 --token="\$GITHUB-TOKEN"
@@ -9,3 +10,4 @@ id-token: write
 accountId: "123456789012"
 "AWSAccountId": "123456789012"
 poetry.lock
+\.gitallowed
