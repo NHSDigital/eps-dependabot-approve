@@ -1,5 +1,5 @@
 {
-  "name": "eps-account-resources",
+  "name": "eps-dependabot-approve",
   "build": {
     "dockerfile": "Dockerfile",
     "context": "..",
