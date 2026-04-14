@@ -1,17 +1,17 @@
 [project]
 python = "^3.14"
-name = "CHANGE_ME"
+name = "eps-dependabot-approve"
 
 [tool.poetry]
-name = "CHANGE_ME"
-description = "CHANGE_ME"
+name = "eps-dependabot-approve"
+description = "eps-dependabot-approve"
 version = "0.0.1-alpha"
 authors = [
   "EPS Team <eps.tem@nhs.net>"
 ]
 readme = "README.md"
 license = "MIT"
-repository = "https://github.com/NHSDigital/CHANGE_ME"
+repository = "https://github.com/NHSDigital/eps-dependabot-approve"
 package-mode = false
 
 [tool.poetry.dependencies]

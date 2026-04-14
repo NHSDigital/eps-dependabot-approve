@@ -15,7 +15,6 @@ install-hooks: install-python
 
 install: install-python install-hooks
 	echo "Not implemented yet"
-	exit 1
 
 install-node:
 	echo "Not implemented yet"
@@ -27,11 +26,9 @@ compile:
 
 lint:
 	echo "Not implemented yet"
-	exit 1
 
 test:
 	echo "Not implemented yet"
-	exit 1
 
 # include common targets
 %:

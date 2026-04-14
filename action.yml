@@ -1,0 +1,64 @@
+name: Auto approve dependabot pull request
+description: "Automatically approves dependabot pull requests."
+inputs:
+  AUTOMERGE_APP_ID:
+    description: "GitHub App ID for approving pull requests"
+    required: true
+  AUTOMERGE_PEM:
+    description: "Private key for the GitHub App in PEM format"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Create GitHub App Token
+      uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859
+      id: generate-token
+      with:
+        app-id: "${{ inputs.AUTOMERGE_APP_ID }}"
+        private-key: "${{ inputs.AUTOMERGE_PEM }}"
+
+    - name: Find eligible pull requests
+      id: find-prs
+      shell: bash
+      env:
+        REPO: ${{ github.repository }}
+        GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+      run: |
+        set -euo pipefail
+
+        mapfile -t pr_numbers < <(gh pr list --repo "$REPO" --state open --json number --jq '.[].number')
+
+        eligible_pr_urls=()
+
+        for pr_number in "${pr_numbers[@]}"; do
+          read -r pr_url head_sha < <(gh pr view "$pr_number" --repo "$REPO" --json url,headRefOid --jq '[.url, .headRefOid] | @tsv')
+          read -r author_login is_verified is_cross_repository < <(gh api "/repos/$REPO/commits/$head_sha" --jq '[.author.login // "", (.commit.verification.verified // false), (.commit.verification.reason // "")] | @tsv')
+
+          if [[ "$is_cross_repository" == "false" ]] && [[ "$is_verified" == "true" ]] && [[ "$author_login" == "dependabot[bot]" || "$author_login" == "eps-create-pull-request[bot]" ]]; then
+            eligible_pr_urls+=("$pr_url")
+          fi
+        done
+
+        echo "Found ${#eligible_pr_urls[@]} eligible pull request(s) for approval and merging."
+        printf '%s\n' "${eligible_pr_urls[@]}"
+
+        {
+          echo "pr_urls<<EOF"
+          printf '%s\n' "${eligible_pr_urls[@]}"
+          echo "EOF"
+        } >> "$GITHUB_OUTPUT"
+
+    - name: Approve and merge updates
+      shell: bash
+      run: |
+        set -euo pipefail
+
+        while IFS= read -r PR_URL; do
+          [[ -z "$PR_URL" ]] && continue
+
+          gh pr review "$PR_URL" --approve -b "I'm **approving** this pull request"
+          gh pr merge --auto --squash "$PR_URL"
+        done <<< "${PR_URLS}"
+      env:
+        GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+        PR_URLS: ${{ steps.find-prs.outputs.pr_urls }}
