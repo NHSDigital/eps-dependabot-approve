@@ -32,9 +32,9 @@ runs:
 
         for pr_number in "${pr_numbers[@]}"; do
           read -r pr_url head_sha < <(gh pr view "$pr_number" --repo "$REPO" --json url,headRefOid --jq '[.url, .headRefOid] | @tsv')
-          read -r author_login is_verified < <(gh api "/repos/$REPO/commits/$head_sha" --jq '[.author.login // "", (.commit.verification.verified // false)] | @tsv')
+          read -r author_login is_verified is_cross_repository < <(gh api "/repos/$REPO/commits/$head_sha" --jq '[.author.login // "", (.commit.verification.verified // false), (.commit.verification.reason // "")] | @tsv')
 
-          if [[ "$is_verified" == "true" ]] && [[ "$author_login" == "dependabot[bot]" || "$author_login" == "eps-create-pull-request[bot]" ]]; then
+          if [[ "$is_cross_repository" == "false" ]] && [[ "$is_verified" == "true" ]] && [[ "$author_login" == "dependabot[bot]" || "$author_login" == "eps-create-pull-request[bot]" ]]; then
             eligible_pr_urls+=("$pr_url")
           fi
         done
